@@ -61,7 +61,24 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
           actions: [
             IconButton(
                 onPressed: () {
+                  final isAlreadyFav = favorites.isFav(widget.meal.id);
                   favorites.toggleFav(widget.meal.id);
+                  //ScaffoldMessenger.of(Context) inside meal_detail better than ScaffoldMessengerState inside notifier (here state there logic)
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(
+                      isAlreadyFav
+                          ? 'Removed from favorites'
+                          : 'Added to favorites',
+                    ),
+                    action: SnackBarAction(
+                      label: 'UNDO',
+                      onPressed: () {
+                        favorites.toggleFav(widget.meal.id);
+                      },
+                    ),
+                    duration: const Duration(seconds: 4),
+                  ));
                 },
                 icon: Icon(isFav ? Icons.star : Icons.star_border_outlined)),
           ],
@@ -138,9 +155,4 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
           ],
         ));
   }
-}
-
-@override
-Widget build(BuildContext context) {
-  throw UnimplementedError();
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:cookbook/models/meal.dart';
+import 'package:flutter/material.dart';
 
 class FavoritesNotifier extends ChangeNotifier {
   final Set<String> _favMealsId = {};
