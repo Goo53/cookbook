@@ -5,7 +5,6 @@ import 'package:cookbook/screens/meals_screen.dart';
 import 'package:cookbook/state/fav_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cookbook/data/dummy_data.dart';
 //import 'package:cookbook/models/meal.dart';
 
 class TabsScreen extends StatefulWidget {

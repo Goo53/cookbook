@@ -1,5 +1,5 @@
-import 'package:cookbook/data/dummy_data.dart';
 import 'package:cookbook/screens/meals_screen.dart';
+import 'package:cookbook/services/meal_service.dart';
 import 'package:flutter/material.dart';
 import 'package:cookbook/models/category.dart';
 
@@ -11,19 +11,15 @@ class CategoryGridItem extends StatelessWidget {
 
   final Category category;
 
-  void _selectCategory(BuildContext context, Category category) {
-    final results = dummyMeals
-        .where((meal) => meal.categories.contains(category.id))
-        .toList();
-
-    String titlepush = category.title;
+  void _selectCategory(BuildContext context, Category category) async {
+    final meals = await MealService.getMealsByCategory(category.id);
 
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => MealsScreen(
-          title: titlepush,
-          meals: results, //dummyMeals,
+          title: category.title,
+          meals: meals, //dummyMeals,
           colors: [
             category.color.withOpacity(0.30),
             category.color.withOpacity(0.6),
