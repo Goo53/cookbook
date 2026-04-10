@@ -1,14 +1,6 @@
-enum Complexity {
-  simple,
-  challenging,
-  hard,
-}
+enum Complexity { simple, challenging, hard }
 
-enum Affordability {
-  affordable,
-  pricey,
-  luxurious,
-}
+enum Affordability { affordable, pricey, luxurious }
 
 class Meal {
   const Meal({
@@ -21,9 +13,7 @@ class Meal {
     required this.duration,
     required this.complexity,
     required this.affordability,
-    required this.isGlutenFree,
-    required this.isLactoseFree,
-    required this.isVegan,
+    required this.isMeat,
     required this.isVegetarian,
   });
 
@@ -36,8 +26,6 @@ class Meal {
   final int duration;
   final Complexity complexity;
   final Affordability affordability;
-  final bool isGlutenFree;
-  final bool isLactoseFree;
-  final bool isVegan;
+  final bool isMeat;
   final bool isVegetarian;
 }
