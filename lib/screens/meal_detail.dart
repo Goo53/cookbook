@@ -1,3 +1,4 @@
+import 'package:cookbook/services/meal_service.dart';
 import 'package:cookbook/state/fav_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:cookbook/models/meal.dart';
@@ -60,9 +61,17 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
           title: Text(widget.meal.title),
           actions: [
             IconButton(
-                onPressed: () {
+                onPressed: () async {
                   final isAlreadyFav = favorites.isFav(widget.meal.id);
                   favorites.toggleFav(widget.meal.id);
+
+                  try {
+                    await MealService.toggleFavorite(widget.meal.id);
+                  } catch (e) {
+                    favorites.toggleFav(widget.meal.id);
+                    print('Sync error: $e');
+                  }
+
                   //ScaffoldMessenger.of(Context) inside meal_detail better than ScaffoldMessengerState inside notifier (here state there logic)
                   ScaffoldMessenger.of(context).clearSnackBars();
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -73,8 +82,9 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                     ),
                     action: SnackBarAction(
                       label: 'UNDO',
-                      onPressed: () {
+                      onPressed: () async {
                         favorites.toggleFav(widget.meal.id);
+                        await MealService.toggleFavorite(widget.meal.id);
                       },
                     ),
                     duration: const Duration(seconds: 4),

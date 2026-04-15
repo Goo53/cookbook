@@ -2,6 +2,7 @@ import 'package:cookbook/screens/categories.dart';
 //import 'package:cookbook/screens/meal_detail.dart';
 //import 'package:cookbook/widgets/meals_list.dart';
 import 'package:cookbook/screens/meals_screen.dart';
+import 'package:cookbook/services/meal_service.dart';
 import 'package:cookbook/state/fav_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,13 +16,31 @@ class TabsScreen extends StatefulWidget {
 
 class _TabsScreenState extends State<TabsScreen> {
   int _selectedIndex = 0;
-
+  bool _isLoading = true;
   //final List<Widget> _pages = [
   //  const CategoriesScreen(),
   //  const MealsScreen(meals: [], colors: [])
   //];
   //final List<Meal> _favourites = [];
   // storing fav as a list of objects is dumbdumb, do store ids set<string>, set up notifier
+  // better move fav to db, sync with backend; initState() <- load data first
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    await MealService.getMeals();
+    await MealService.loadFavorites();
+
+    final favorites = context.read<FavoritesNotifier>();
+    favorites.setFavorites(MealService.getFavoriteIds());
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
 
   void _selectPage(int index) {
     setState(() => _selectedIndex = index);
@@ -29,9 +48,15 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final favoritesNotifier = context.watch<FavoritesNotifier>();
-    final favMeals = favoritesNotifier.getFavMeals(dummyMeals);
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
 
+    final favoritesNotifier = context.watch<FavoritesNotifier>();
+    final allMeals = MealService.getCachedMeals();
+    final favMeals = favoritesNotifier.getFavMeals(allMeals);
     final pages = [
       const CategoriesScreen(),
       MealsScreen(

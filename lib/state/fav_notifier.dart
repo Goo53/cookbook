@@ -3,7 +3,7 @@ import 'package:cookbook/models/meal.dart';
 import 'package:flutter/material.dart';
 
 class FavoritesNotifier extends ChangeNotifier {
-  final Set<String> _favMealsId = {};
+  Set<String> _favMealsId = {};
   bool isFav(String mealId) {
     return _favMealsId.contains(mealId);
   }
@@ -14,6 +14,11 @@ class FavoritesNotifier extends ChangeNotifier {
     } else {
       _favMealsId.add(mealId);
     }
+    notifyListeners();
+  }
+
+  void setFavorites(Set<String> ids) {
+    _favMealsId = ids;
     notifyListeners();
   }
 

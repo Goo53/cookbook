@@ -9,6 +9,7 @@ class MealService {
   static const String token = 'my-secret-token';
   static List<Meal> _cachedMeals = [];
   static final Map<String, List<Meal>> _cachedByCategory = {};
+  static final Set<String> _favoriteIds = {};
 
   static Map<String, String> get headers => {
         'Content-Type': 'application/json',
@@ -51,6 +52,43 @@ class MealService {
     } else {
       throw Exception('Failed to load meals by category');
     }
+  }
+
+  static Future<void> loadFavorites() async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/favorites'),
+      headers: headers,
+    );
+    if (response.statusCode == 200) {
+      final List data = jsonDecode(response.body);
+      _favoriteIds
+        ..clear()
+        ..addAll(data.map((e) => e.toString()));
+    }
+  }
+
+  static Future<void> toggleFavorite(String mealId) async {
+    if (_favoriteIds.contains(mealId)) {
+      await http.delete(
+        Uri.parse('$baseUrl/favorites/$mealId'),
+        headers: headers,
+      );
+      _favoriteIds.remove(mealId);
+    } else {
+      await http.post(
+        Uri.parse('$baseUrl/favorites/$mealId'),
+        headers: headers,
+      );
+      _favoriteIds.add(mealId);
+    }
+  }
+
+  static bool isFavorite(String mealId) {
+    return _favoriteIds.contains(mealId);
+  }
+
+  static Set<String> getFavoriteIds() {
+    return Set.unmodifiable(_favoriteIds);
   }
 
   static Future<void> addMeal(Meal meal) async {
