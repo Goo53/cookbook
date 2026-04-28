@@ -64,31 +64,42 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                 onPressed: () async {
                   final isAlreadyFav = favorites.isFav(widget.meal.id);
                   favorites.toggleFav(widget.meal.id);
-
                   try {
                     await MealService.toggleFavorite(widget.meal.id);
+                    if (!mounted) return;
+                    ScaffoldMessenger.of(context)
+                      ..clearSnackBars()
+                      ..showSnackBar(SnackBar(
+                        content: Text(
+                          isAlreadyFav
+                              ? 'Removed from favorites'
+                              : 'Added to favorites',
+                        ),
+                        action: SnackBarAction(
+                          label: 'UNDO',
+                          onPressed: () async {
+                            favorites.toggleFav(widget.meal.id);
+                            try {
+                              await MealService.toggleFavorite(widget.meal.id);
+                            } catch (e) {
+                              favorites.toggleFav(widget.meal.id);
+                              if (mounted) {
+                                ScaffoldMessenger.of(context)
+                                  ..clearSnackBars()
+                                  ..showSnackBar(SnackBar(content: Text(e.toString())));
+                              }
+                            }
+                          },
+                        ),
+                        duration: const Duration(seconds: 4),
+                      ));
                   } catch (e) {
                     favorites.toggleFav(widget.meal.id);
-                    print('Sync error: $e');
+                    if (!mounted) return;
+                    ScaffoldMessenger.of(context)
+                      ..clearSnackBars()
+                      ..showSnackBar(SnackBar(content: Text(e.toString())));
                   }
-
-                  //ScaffoldMessenger.of(Context) inside meal_detail better than ScaffoldMessengerState inside notifier (here state there logic)
-                  ScaffoldMessenger.of(context).clearSnackBars();
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(
-                      isAlreadyFav
-                          ? 'Removed from favorites'
-                          : 'Added to favorites',
-                    ),
-                    action: SnackBarAction(
-                      label: 'UNDO',
-                      onPressed: () async {
-                        favorites.toggleFav(widget.meal.id);
-                        await MealService.toggleFavorite(widget.meal.id);
-                      },
-                    ),
-                    duration: const Duration(seconds: 4),
-                  ));
                 },
                 icon: Icon(isFav ? Icons.star : Icons.star_border_outlined)),
           ],

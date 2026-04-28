@@ -1,11 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import '../models/meal.dart';
+import '../data/available_categories.dart';
 
 class MealService {
-  static const String baseUrl = 'http://10.0.2.2:8080/api'; //android emulator
-  // http://localhost:8080/api <- iOS
-  // http://YOUR-PC-ID:8080/api <-phone
+  static const String baseUrl = 'http://localhost:8080/api'; //macOS/iOS/desktop
+  // http://10.0.2.2:8080/api <- Android emulator
+  // http://YOUR-PC-IP:8080/api <- Phone
   static const String token = 'my-secret-token';
   static List<Meal> _cachedMeals = [];
   static final Map<String, List<Meal>> _cachedByCategory = {};
@@ -38,9 +40,12 @@ class MealService {
       return _cachedByCategory[categoryId]!;
     }
 
+    // Convert category ID to actual category name for backend
+    final categoryName = getCategoryName(categoryId);
+
     // if not cached yet call backend
     final response = await http.get(
-      Uri.parse('$baseUrl/meals/filter?category=$categoryId'),
+      Uri.parse('$baseUrl/meals/filter?category=$categoryName'),
       headers: headers,
     );
     if (response.statusCode == 200) {
@@ -55,31 +60,45 @@ class MealService {
   }
 
   static Future<void> loadFavorites() async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/favorites'),
-      headers: headers,
-    );
-    if (response.statusCode == 200) {
-      final List data = jsonDecode(response.body);
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/favorites'),
+        headers: headers,
+      );
+      if (response.statusCode != 200) {
+        throw Exception('Server error: ${response.statusCode}');
+      }
+      final data = jsonDecode(response.body);
+      if (data is! List) throw FormatException('Unexpected favorites response format');
       _favoriteIds
         ..clear()
         ..addAll(data.map((e) => e.toString()));
+    } on SocketException {
+      throw Exception('No internet connection. Check your network and try again.');
+    } on FormatException {
+      throw Exception('Server returned invalid data. Please try again.');
     }
   }
 
   static Future<void> toggleFavorite(String mealId) async {
-    if (_favoriteIds.contains(mealId)) {
-      await http.delete(
-        Uri.parse('$baseUrl/favorites/$mealId'),
-        headers: headers,
-      );
-      _favoriteIds.remove(mealId);
-    } else {
-      await http.post(
-        Uri.parse('$baseUrl/favorites/$mealId'),
-        headers: headers,
-      );
-      _favoriteIds.add(mealId);
+    try {
+      if (_favoriteIds.contains(mealId)) {
+        final res = await http.delete(
+          Uri.parse('$baseUrl/favorites/$mealId'),
+          headers: headers,
+        );
+        if (res.statusCode != 200) throw Exception('Failed to remove favorite');
+        _favoriteIds.remove(mealId);
+      } else {
+        final res = await http.post(
+          Uri.parse('$baseUrl/favorites/$mealId'),
+          headers: headers,
+        );
+        if (res.statusCode != 200) throw Exception('Failed to add favorite');
+        _favoriteIds.add(mealId);
+      }
+    } on SocketException {
+      throw Exception('No internet connection');
     }
   }
 

@@ -43,3 +43,11 @@ const availableCategories = [
     color: Colors.teal,
   ),
 ];
+
+String getCategoryName(String categoryId) {
+  final category = availableCategories.firstWhere(
+    (cat) => cat.id == categoryId,
+    orElse: () => const Category(id: '', title: '', color: Colors.grey),
+  );
+  return category.title;
+}

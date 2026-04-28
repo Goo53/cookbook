@@ -18,7 +18,7 @@ class FavoritesNotifier extends ChangeNotifier {
   }
 
   void setFavorites(Set<String> ids) {
-    _favMealsId = ids;
+    _favMealsId = {...ids};
     notifyListeners();
   }
 

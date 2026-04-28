@@ -17,13 +17,8 @@ class TabsScreen extends StatefulWidget {
 class _TabsScreenState extends State<TabsScreen> {
   int _selectedIndex = 0;
   bool _isLoading = true;
-  //final List<Widget> _pages = [
-  //  const CategoriesScreen(),
-  //  const MealsScreen(meals: [], colors: [])
-  //];
-  //final List<Meal> _favourites = [];
-  // storing fav as a list of objects is dumbdumb, do store ids set<string>, set up notifier
-  // better move fav to db, sync with backend; initState() <- load data first
+  String? _errorMessage;
+
   @override
   void initState() {
     super.initState();
@@ -31,15 +26,25 @@ class _TabsScreenState extends State<TabsScreen> {
   }
 
   Future<void> _loadData() async {
-    await MealService.getMeals();
-    await MealService.loadFavorites();
-
-    final favorites = context.read<FavoritesNotifier>();
-    favorites.setFavorites(MealService.getFavoriteIds());
-
     setState(() {
-      _isLoading = false;
+      _isLoading = true;
+      _errorMessage = null;
     });
+    try {
+      await MealService.getMeals();
+      await MealService.loadFavorites();
+      if (!mounted) return;
+      context.read<FavoritesNotifier>().setFavorites(MealService.getFavoriteIds());
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _errorMessage = e.toString();
+        });
+      }
+    }
   }
 
   void _selectPage(int index) {
@@ -48,6 +53,39 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_errorMessage != null) {
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error_outline, size: 64, color: Colors.red),
+              const SizedBox(height: 16),
+              const Text(
+                'Failed to load meals',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Text(
+                  _errorMessage!,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton.icon(
+                onPressed: _loadData,
+                icon: const Icon(Icons.refresh),
+                label: const Text('Retry'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     if (_isLoading) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
@@ -60,25 +98,19 @@ class _TabsScreenState extends State<TabsScreen> {
     final pages = [
       const CategoriesScreen(),
       MealsScreen(
+        title: 'All Recipes',
+        meals: allMeals,
+        colors: const [Colors.blue, Colors.cyan],
+      ),
+      MealsScreen(
         title: 'Your Favorites',
         meals: favMeals,
         colors: const [Colors.red, Colors.orange],
       ),
     ];
 
-    //Widget activePage = const CategoriesScreen();
-    //
-    //  if (_selectedPageIndex == 1) {
-    //activePage = const MealsScreen(
-    // title: 'Favourites',
-    //meals: [],
-    //colors: [],
-    // );
-    //}
     return Scaffold(
-      appBar: AppBar(
-          // title: ,
-          ),
+      appBar: AppBar(),
       body: IndexedStack(
         index: _selectedIndex,
         children: pages,
@@ -89,6 +121,10 @@ class _TabsScreenState extends State<TabsScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.set_meal),
             label: "Categories",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.restaurant_menu),
+            label: "All Recipes",
           ),
           BottomNavigationBarItem(icon: Icon(Icons.star), label: "Favourites"),
         ],
