@@ -45,7 +45,7 @@ class MealService {
 
     // if not cached yet call backend
     final response = await http.get(
-      Uri.parse('$baseUrl/meals/filter?category=$categoryName'),
+      Uri.parse('$baseUrl/meals_filter?category=$categoryName'),
       headers: headers,
     );
     if (response.statusCode == 200) {
@@ -69,12 +69,14 @@ class MealService {
         throw Exception('Server error: ${response.statusCode}');
       }
       final data = jsonDecode(response.body);
-      if (data is! List) throw FormatException('Unexpected favorites response format');
+      if (data is! List)
+        throw FormatException('Unexpected favorites response format');
       _favoriteIds
         ..clear()
         ..addAll(data.map((e) => e.toString()));
     } on SocketException {
-      throw Exception('No internet connection. Check your network and try again.');
+      throw Exception(
+          'No internet connection. Check your network and try again.');
     } on FormatException {
       throw Exception('Server returned invalid data. Please try again.');
     }
