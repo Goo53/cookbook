@@ -4,17 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:cookbook/models/meal.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';
+import 'package:cookbook/generated/l10n/app_localizations.dart';
 
-// here to create statefull widget to use CheckboxListTile widget managing bool var
-// corresponging with earch step and doing:
-//(bool? value[i]) {
-//              setState(() {
-//                checkboxValue[i] = value!;
-//              });
-//            },
-// probably for steps too
-// creating bool var dynamically(?) -> creating list of boolean variables alongside ingridients
-// and then changing state of it inside list
 class MealDetailScreen extends StatefulWidget {
   const MealDetailScreen(
       {super.key,
@@ -61,45 +52,47 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
           title: Text(widget.meal.title),
           actions: [
             IconButton(
-                onPressed: () async {
+                onPressed: () {
                   final isAlreadyFav = favorites.isFav(widget.meal.id);
+                  final loc = AppLocalizations.of(context);
+                  final undoLabel = loc.undoButton;
+                  final removedMsg = loc.removedFromFavorites;
+                  final addedMsg = loc.addedToFavorites;
+                  final errorMsg = loc.errorServerError;
+                  final scaffoldMessenger = ScaffoldMessenger.of(context);
                   favorites.toggleFav(widget.meal.id);
-                  try {
-                    await MealService.toggleFavorite(widget.meal.id);
+                  MealService.toggleFavorite(widget.meal.id).then((_) {
                     if (!mounted) return;
-                    ScaffoldMessenger.of(context)
+                    scaffoldMessenger
                       ..clearSnackBars()
                       ..showSnackBar(SnackBar(
                         content: Text(
-                          isAlreadyFav
-                              ? 'Removed from favorites'
-                              : 'Added to favorites',
+                          isAlreadyFav ? removedMsg : addedMsg,
                         ),
                         action: SnackBarAction(
-                          label: 'UNDO',
-                          onPressed: () async {
+                          label: undoLabel,
+                          onPressed: () {
                             favorites.toggleFav(widget.meal.id);
-                            try {
-                              await MealService.toggleFavorite(widget.meal.id);
-                            } catch (e) {
+                            MealService.toggleFavorite(widget.meal.id).catchError((e) {
                               favorites.toggleFav(widget.meal.id);
                               if (mounted) {
-                                ScaffoldMessenger.of(context)
+                                scaffoldMessenger
                                   ..clearSnackBars()
-                                  ..showSnackBar(SnackBar(content: Text(e.toString())));
+                                  ..showSnackBar(
+                                      SnackBar(content: Text(errorMsg)));
                               }
-                            }
+                            });
                           },
                         ),
                         duration: const Duration(seconds: 4),
                       ));
-                  } catch (e) {
+                  }).catchError((e) {
                     favorites.toggleFav(widget.meal.id);
                     if (!mounted) return;
-                    ScaffoldMessenger.of(context)
+                    scaffoldMessenger
                       ..clearSnackBars()
                       ..showSnackBar(SnackBar(content: Text(e.toString())));
-                  }
+                  });
                 },
                 icon: Icon(isFav ? Icons.star : Icons.star_border_outlined)),
           ],
@@ -134,7 +127,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
             ),
             const SizedBox(height: 14),
             Text(
-              "Ingredients:",
+              AppLocalizations.of(context).ingredientsTitle,
               style: Theme.of(context)
                   .textTheme
                   .titleLarge!
@@ -157,7 +150,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                 )),
             const SizedBox(height: 14),
             Text(
-              "Steps:",
+              AppLocalizations.of(context).stepsTitle,
               style: Theme.of(context)
                   .textTheme
                   .titleLarge!

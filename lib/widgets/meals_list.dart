@@ -1,9 +1,8 @@
 import 'package:cookbook/screens/meal_detail.dart';
 import 'package:cookbook/widgets/meal_item_trait.dart';
 import 'package:flutter/material.dart';
-
+import 'package:cookbook/generated/l10n/app_localizations.dart';
 import 'package:cookbook/models/meal.dart';
-//import 'package:transparent_image/transparent_image.dart'; cached is asynchronus and doesn't freezes ui
 import 'package:cached_network_image/cached_network_image.dart';
 
 class MealsList extends StatelessWidget {
@@ -27,6 +26,28 @@ class MealsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String getComplexityLabel(Complexity complexity) {
+      switch (complexity) {
+        case Complexity.simple:
+          return AppLocalizations.of(context).complexitySimple;
+        case Complexity.challenging:
+          return AppLocalizations.of(context).complexityChallenging;
+        case Complexity.hard:
+          return AppLocalizations.of(context).complexityHard;
+      }
+    }
+
+    String getAffordabilityLabel(Affordability affordability) {
+      switch (affordability) {
+        case Affordability.affordable:
+          return AppLocalizations.of(context).affordabilityAffordable;
+        case Affordability.pricey:
+          return AppLocalizations.of(context).affordabilityPricey;
+        case Affordability.luxurious:
+          return AppLocalizations.of(context).affordabilityLuxurious;
+      }
+    }
+
     return ListView.builder(
       itemCount: meals.length,
       itemBuilder: (context, index) => Card(
@@ -78,7 +99,7 @@ class MealsList extends StatelessWidget {
                             colors: [
                               Colors.black87,
                               Colors.black54,
-                              Colors.black.withOpacity(0.0)
+                              Colors.black.withValues(alpha: 0.0)
                             ]),
                         //color: Colors.black54,
                         border: Border.all(style: BorderStyle.none),
@@ -114,25 +135,22 @@ class MealsList extends StatelessWidget {
                             runSpacing: 8,
                             children: [
                               MealItemTrait(
-                                  string: "${meals[index].duration} min",
+                                  string: AppLocalizations.of(context)
+                                      .durationMinutes(meals[index].duration),
                                   iconData: Icons.schedule),
                               const SizedBox(
                                 width: 12,
                               ),
                               MealItemTrait(
-                                  string: meals[index]
-                                      .complexity
-                                      .name
-                                      .toUpperCase(),
+                                  string: getComplexityLabel(
+                                      meals[index].complexity),
                                   iconData: Icons.work),
                               const SizedBox(
                                 width: 12,
                               ),
                               MealItemTrait(
-                                  string: meals[index]
-                                      .affordability
-                                      .name
-                                      .toUpperCase(),
+                                  string: getAffordabilityLabel(
+                                      meals[index].affordability),
                                   iconData: Icons.attach_money)
                             ],
                           ),

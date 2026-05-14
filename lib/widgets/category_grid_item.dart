@@ -2,6 +2,7 @@ import 'package:cookbook/screens/meals_screen.dart';
 import 'package:cookbook/services/meal_service.dart';
 import 'package:flutter/material.dart';
 import 'package:cookbook/models/category.dart';
+import 'package:cookbook/data/available_categories.dart';
 
 class CategoryGridItem extends StatelessWidget {
   const CategoryGridItem({
@@ -14,15 +15,17 @@ class CategoryGridItem extends StatelessWidget {
   void _selectCategory(BuildContext context, Category category) async {
     final meals = await MealService.getMealsByCategory(category.id);
 
+    if (!context.mounted) return;
+    final displayName = getCategoryDisplayName(category.apiKey, context);
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => MealsScreen(
-          title: category.title,
+          title: displayName,
           meals: meals, //dummyMeals,
           colors: [
-            category.color.withOpacity(0.30),
-            category.color.withOpacity(0.6),
+            category.color.withValues(alpha: 0.30),
+            category.color.withValues(alpha: 0.6),
           ],
         ),
       ),
@@ -44,15 +47,15 @@ class CategoryGridItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           gradient: LinearGradient(
             colors: [
-              category.color.withOpacity(0.30),
-              category.color.withOpacity(0.6),
+              category.color.withValues(alpha: 0.30),
+              category.color.withValues(alpha: 0.6),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
         ),
         child: Text(
-          category.title,
+          getCategoryDisplayName(category.apiKey, context),
           style: Theme.of(context).textTheme.titleLarge!.copyWith(
                 color: Theme.of(context).colorScheme.onSurface,
               ),

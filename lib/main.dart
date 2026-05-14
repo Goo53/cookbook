@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:cookbook/state/fav_notifier.dart';
-//import 'state/fav_notifier.dart'; //adding it here Now context.watch / context.read works everywhere.
+import 'package:cookbook/state/locale_notifier.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'generated/l10n/app_localizations.dart'; //import 'state/fav_notifier.dart'; //adding it here Now context.watch / context.read works everywhere.
 
 final theme = ThemeData(
   useMaterial3: true,
@@ -15,8 +17,11 @@ final theme = ThemeData(
 );
 
 void main() {
-  runApp(ChangeNotifierProvider(
-    create: (_) => FavoritesNotifier(),
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => FavoritesNotifier()),
+      ChangeNotifierProvider(create: (_) => LocaleNotifier()),
+    ],
     child: const App(),
   ));
 }
@@ -26,7 +31,19 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(theme: theme, home: const TabsScreen() //Todo,
-        );
+    final locale = context.watch<LocaleNotifier>().locale;
+
+    return MaterialApp(
+      locale: locale,
+      theme: theme,
+      home: const TabsScreen(),
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('en'), Locale('pl')],
+    );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:cookbook/widgets/category_grid_item.dart';
 import '../data/available_categories.dart';
 import 'package:flutter/material.dart';
+import 'package:cookbook/generated/l10n/app_localizations.dart';
 
 class CategoriesScreen extends StatelessWidget {
   const CategoriesScreen({super.key});
@@ -9,7 +10,7 @@ class CategoriesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(" Categories: "),
+        title: Text(AppLocalizations.of(context).categoriesTitle),
       ),
       body: GridView.builder(
         padding: const EdgeInsets.all(24),

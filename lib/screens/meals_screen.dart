@@ -1,6 +1,7 @@
 import 'package:cookbook/widgets/meals_list.dart';
 import 'package:flutter/material.dart';
 import 'package:cookbook/models/meal.dart';
+import 'package:cookbook/generated/l10n/app_localizations.dart';
 
 class MealsScreen extends StatelessWidget {
   const MealsScreen(
@@ -26,10 +27,10 @@ class MealsScreen extends StatelessWidget {
         children: [
           Expanded(
             child: meals.isEmpty
-                ? const Center(
+                ? Center(
                     child: Text(
-                      "No meals in here",
-                      style: TextStyle(color: Colors.white, fontSize: 30),
+                      AppLocalizations.of(context).noMealsText,
+                      style: const TextStyle(color: Colors.white, fontSize: 30),
                     ),
                   )
                 : MealsList(

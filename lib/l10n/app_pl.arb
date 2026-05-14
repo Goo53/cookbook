@@ -1,0 +1,153 @@
+{
+  "@@locale": "pl",
+  "appTitle": "Książka Kulinarna Flutter",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "categoriesLabel": "Kategorie",
+  "@categoriesLabel": {
+    "description": "Label for categories tab"
+  },
+  "allRecipesLabel": "Wszystkie Przepisy",
+  "@allRecipesLabel": {
+    "description": "Label for all recipes tab"
+  },
+  "favoritesLabel": "Ulubione",
+  "@favoritesLabel": {
+    "description": "Label for favorites tab"
+  },
+  "categoriesTitle": "Kategorie:",
+  "@categoriesTitle": {
+    "description": "Title for categories screen"
+  },
+  "ingredientsTitle": "Składniki:",
+  "@ingredientsTitle": {
+    "description": "Section title for ingredients"
+  },
+  "stepsTitle": "Kroki:",
+  "@stepsTitle": {
+    "description": "Section title for cooking steps"
+  },
+  "noMealsText": "Brak przepisów tutaj",
+  "@noMealsText": {
+    "description": "Message when no meals are available"
+  },
+  "failedToLoadMeals": "Nie udało się załadować przepisów",
+  "@failedToLoadMeals": {
+    "description": "Error message when meal loading fails"
+  },
+  "retryButton": "Spróbuj ponownie",
+  "@retryButton": {
+    "description": "Button label to retry loading"
+  },
+  "addedToFavorites": "Dodano do ulubionych",
+  "@addedToFavorites": {
+    "description": "Message when meal is added to favorites"
+  },
+  "removedFromFavorites": "Usunięto z ulubionych",
+  "@removedFromFavorites": {
+    "description": "Message when meal is removed from favorites"
+  },
+  "undoButton": "COFNIJ",
+  "@undoButton": {
+    "description": "Button label to undo action"
+  },
+  "categoryItalian": "Włoskie",
+  "@categoryItalian": {
+    "description": "Italian cuisine category"
+  },
+  "categoryQuickEasy": "Szybkie & Łatwe",
+  "@categoryQuickEasy": {
+    "description": "Quick and easy recipes category"
+  },
+  "categoryHamburgers": "Hamburgery",
+  "@categoryHamburgers": {
+    "description": "Hamburgers category"
+  },
+  "categoryGerman": "Niemieckie",
+  "@categoryGerman": {
+    "description": "German cuisine category"
+  },
+  "categoryLightLovely": "Lekkie & Ładne",
+  "@categoryLightLovely": {
+    "description": "Light and lovely recipes category"
+  },
+  "categoryExotic": "Egzotyczne",
+  "@categoryExotic": {
+    "description": "Exotic cuisine category"
+  },
+  "categoryBreakfast": "Śniadanie",
+  "@categoryBreakfast": {
+    "description": "Breakfast recipes category"
+  },
+  "categoryAsian": "Azjatyckie",
+  "@categoryAsian": {
+    "description": "Asian cuisine category"
+  },
+  "complexitySimple": "Proste",
+  "@complexitySimple": {
+    "description": "Simple complexity level"
+  },
+  "complexityChallenging": "Wyzywające",
+  "@complexityChallenging": {
+    "description": "Challenging complexity level"
+  },
+  "complexityHard": "Trudne",
+  "@complexityHard": {
+    "description": "Hard complexity level"
+  },
+  "durationMinutes": "{minutes} min",
+  "@durationMinutes": {
+    "description": "Duration in minutes",
+    "placeholders": {
+      "minutes": {
+        "type": "int",
+        "example": "30"
+      }
+    }
+  },
+  "affordabilityAffordable": "Tanie",
+  "@affordabilityAffordable": {
+    "description": "Cheap in making"
+  },
+  "affordabilityPricey": "Drogie",
+  "@affordabilityPricey": {
+    "description": "Costly ingredients but within reason"
+  },
+  "affordabilityLuxurious": "Luksusowe",
+  "@affordabilityLuxurious": {
+    "description": "Did you have your payday?"
+  },
+  "errorFailedToLoadMealsByCategory": "Nie udało się załadować przepisów dla tej kategorii",
+  "@errorFailedToLoadMealsByCategory": {
+    "description": "Failed to load meals for this category"
+  },
+  "errorServerError": "Błąd serwera. Spróbuj ponownie.",
+  "@errorServerError": {
+    "description": "Server error occurred while loading data"
+  },
+  "errorUnexpectedResponseFormat": "Nieoczekiwana odpowiedź serwera. Spróbuj ponownie.",
+  "@errorUnexpectedResponseFormat": {
+    "description": "Unexpected server response format"
+  },
+  "errorNoInternetConnection": "Brak połączenia internetowego. Sprawdź sieć i spróbuj ponownie.",
+  "@errorNoInternetConnection": {
+    "description": "No internet connection available"
+  },
+  "errorInvalidServerData": "Serwer zwrócił nieprawidłowe dane. Spróbuj ponownie.",
+  "@errorInvalidServerData": {
+    "description": "Server returned invalid data"
+  },
+  "errorFailedToRemoveFavorite": "Nie udało się usunąć z ulubionych.",
+  "@errorFailedToRemoveFavorite": {
+    "description": "Failed to remove meal from favorites"
+  },
+  "errorFailedToAddMeal": "Nie udało się dodać przepisu. Spróbuj ponownie.",
+  "@errorFailedToAddMeal": {
+    "description": "Failed to add meal to favorites"
+  },
+  "errorFailedToAddFavorite": "Nie udało się dodać do ulubionych.",
+  "@errorFailedToAddFavorite": {
+    "description": "Failed to add meal to favorites"
+  }
+}

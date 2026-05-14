@@ -1,53 +1,69 @@
 import 'package:flutter/material.dart';
 import '../models/category.dart';
+import '../generated/l10n/app_localizations.dart';
 
 const availableCategories = [
   Category(
     id: 'c1',
-    title: 'Italian',
+    apiKey: 'Italian',
     color: Colors.red,
   ),
   Category(
     id: 'c2',
-    title: 'Quick & Easy',
+    apiKey: 'Quick & Easy',
     color: Colors.orange,
   ),
   Category(
     id: 'c3',
-    title: 'Hamburgers',
+    apiKey: 'Hamburgers',
     color: Colors.amber,
   ),
   Category(
     id: 'c4',
-    title: 'German',
+    apiKey: 'German',
     color: Colors.blue,
   ),
   Category(
     id: 'c5',
-    title: 'Light & Lovely',
+    apiKey: 'Light & Lovely',
     color: Colors.green,
   ),
   Category(
     id: 'c6',
-    title: 'Exotic',
+    apiKey: 'Exotic',
     color: Colors.purple,
   ),
   Category(
     id: 'c7',
-    title: 'Breakfast',
+    apiKey: 'Breakfast',
     color: Colors.brown,
   ),
   Category(
     id: 'c8',
-    title: 'Asian',
+    apiKey: 'Asian',
     color: Colors.teal,
   ),
 ];
 
-String getCategoryName(String categoryId) {
+String getCategoryApiKey(String categoryId) {
   final category = availableCategories.firstWhere(
     (cat) => cat.id == categoryId,
-    orElse: () => const Category(id: '', title: '', color: Colors.grey),
+    orElse: () => const Category(id: '', apiKey: '', color: Colors.grey),
   );
-  return category.title;
+  return category.apiKey;
+}
+
+String getCategoryDisplayName(String apiKey, BuildContext context) {
+  final l10n = AppLocalizations.of(context);
+  return switch (apiKey) {
+    'Italian' => l10n.categoryItalian,
+    'Quick & Easy' => l10n.categoryQuickEasy,
+    'Hamburgers' => l10n.categoryHamburgers,
+    'German' => l10n.categoryGerman,
+    'Light & Lovely' => l10n.categoryLightLovely,
+    'Exotic' => l10n.categoryExotic,
+    'Breakfast' => l10n.categoryBreakfast,
+    'Asian' => l10n.categoryAsian,
+    _ => apiKey,
+  };
 }

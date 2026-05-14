@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import '../models/meal.dart';
 import '../data/available_categories.dart';
+import '../exceptions/meal_exception.dart';
 
 class MealService {
   static const String baseUrl = 'http://localhost:8080/api'; //macOS/iOS/desktop
@@ -28,7 +29,7 @@ class MealService {
       _cachedMeals = data.map((e) => Meal.fromJson(e)).toList();
       return _cachedMeals;
     } else {
-      throw Exception('Failed to load meals');
+      throw const MealException(MealErrorType.failedToLoadMeals);
     }
   }
 
@@ -41,7 +42,7 @@ class MealService {
     }
 
     // Convert category ID to actual category name for backend
-    final categoryName = getCategoryName(categoryId);
+    final categoryName = getCategoryApiKey(categoryId);
 
     // if not cached yet call backend
     final response = await http.get(
@@ -55,7 +56,7 @@ class MealService {
       return meals;
       // REMEMBER TO CLEARCACHE() after backend changes OR ADD REFRESH BUTTON
     } else {
-      throw Exception('Failed to load meals by category');
+      throw const MealException(MealErrorType.failedToLoadMealsByCategory);
     }
   }
 
@@ -66,19 +67,17 @@ class MealService {
         headers: headers,
       );
       if (response.statusCode != 200) {
-        throw Exception('Server error: ${response.statusCode}');
+        throw const MealException(MealErrorType.serverError);
       }
       final data = jsonDecode(response.body);
-      if (data is! List)
-        throw FormatException('Unexpected favorites response format');
+      if (data is! List) {
+        throw const MealException(MealErrorType.unexpectedResponseFormat);
+      }
       _favoriteIds
         ..clear()
         ..addAll(data.map((e) => e.toString()));
     } on SocketException {
-      throw Exception(
-          'No internet connection. Check your network and try again.');
-    } on FormatException {
-      throw Exception('Server returned invalid data. Please try again.');
+      throw const MealException(MealErrorType.noInternetConnection);
     }
   }
 
@@ -89,18 +88,22 @@ class MealService {
           Uri.parse('$baseUrl/favorites/$mealId'),
           headers: headers,
         );
-        if (res.statusCode != 200) throw Exception('Failed to remove favorite');
+        if (res.statusCode != 200) {
+          throw const MealException(MealErrorType.failedToRemoveFavorite);
+        }
         _favoriteIds.remove(mealId);
       } else {
         final res = await http.post(
           Uri.parse('$baseUrl/favorites/$mealId'),
           headers: headers,
         );
-        if (res.statusCode != 200) throw Exception('Failed to add favorite');
+        if (res.statusCode != 200) {
+          throw const MealException(MealErrorType.failedToAddFavorite);
+        }
         _favoriteIds.add(mealId);
       }
     } on SocketException {
-      throw Exception('No internet connection');
+      throw const MealException(MealErrorType.noInternetConnection);
     }
   }
 
@@ -119,7 +122,7 @@ class MealService {
       body: jsonEncode(meal.toJson()),
     );
     if (response.statusCode != 201) {
-      throw Exception('Failed to add meal: ${response.body}');
+      throw const MealException(MealErrorType.failedToAddMeal);
     }
   }
   // TO DO
