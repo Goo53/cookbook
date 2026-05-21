@@ -266,6 +266,72 @@ abstract class AppLocalizations {
   /// **'Luxurious'**
   String get affordabilityLuxurious;
 
+  /// Button or title for creating a new meal
+  ///
+  /// In en, this message translates to:
+  /// **'Add meal'**
+  String get addMeal;
+
+  /// Button or title for editing an existing meal
+  ///
+  /// In en, this message translates to:
+  /// **'Edit meal'**
+  String get editMeal;
+
+  /// Button label for deleting a meal
+  ///
+  /// In en, this message translates to:
+  /// **'Delete meal'**
+  String get deleteMeal;
+
+  /// Button label for saving a meal form
+  ///
+  /// In en, this message translates to:
+  /// **'Save meal'**
+  String get saveMeal;
+
+  /// Button label to cancel an action
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// Confirmation dialog title before deleting a meal
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this meal?'**
+  String get confirmDeleteMeal;
+
+  /// Success message after creating a meal
+  ///
+  /// In en, this message translates to:
+  /// **'Meal created'**
+  String get mealCreated;
+
+  /// Success message after updating a meal
+  ///
+  /// In en, this message translates to:
+  /// **'Meal updated'**
+  String get mealUpdated;
+
+  /// Success message after deleting a meal
+  ///
+  /// In en, this message translates to:
+  /// **'Meal deleted'**
+  String get mealDeleted;
+
+  /// Validation message for an empty required field
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get requiredField;
+
+  /// Validation message for invalid meal duration
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid duration'**
+  String get invalidDuration;
+
   /// Failed to load meals for this category
   ///
   /// In en, this message translates to:
@@ -313,6 +379,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to add to favorites.'**
   String get errorFailedToAddFavorite;
+
+  /// Failed to update meal
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update meal.'**
+  String get errorFailedToUpdateMeal;
+
+  /// Failed to delete meal
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete meal.'**
+  String get errorFailedToDeleteMeal;
 }
 
 class _AppLocalizationsDelegate

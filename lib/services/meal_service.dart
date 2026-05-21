@@ -124,6 +124,39 @@ class MealService {
     if (response.statusCode != 201) {
       throw const MealException(MealErrorType.failedToAddMeal);
     }
+    await refreshMeals();
+  }
+
+  static Future<void> updateMeal(String mealId, Meal meal) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/meals/$mealId'),
+      headers: headers,
+      body: jsonEncode(meal.toJson()),
+    );
+    if (response.statusCode != 200) {
+      throw const MealException(MealErrorType.failedToUpdateMeal);
+    }
+    await refreshMeals();
+  }
+
+  static Future<void> deleteMeal(String mealId) async {
+    final response = await http.delete(
+      Uri.parse('$baseUrl/meals/$mealId'),
+      headers: headers,
+    );
+    if (response.statusCode != 200) {
+      throw const MealException(MealErrorType.failedToDeleteMeal);
+    }
+  }
+
+  static void clearCache() {
+    _cachedMeals = [];
+    _cachedByCategory.clear();
+  }
+
+  static Future<List<Meal>> refreshMeals() async {
+    _cachedByCategory.clear();
+    return getMeals();
   }
   // TO DO
   //static Future<Meal> getMealById(String id) async {}

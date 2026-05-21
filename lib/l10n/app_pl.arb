@@ -118,6 +118,50 @@
   "@affordabilityLuxurious": {
     "description": "Did you have your payday?"
   },
+  "addMeal": "Dodaj przepis",
+  "@addMeal": {
+    "description": "Button or title for creating a new meal"
+  },
+  "editMeal": "Edytuj przepis",
+  "@editMeal": {
+    "description": "Button or title for editing an existing meal"
+  },
+  "deleteMeal": "Usuń przepis",
+  "@deleteMeal": {
+    "description": "Button label for deleting a meal"
+  },
+  "saveMeal": "Zapisz przepis",
+  "@saveMeal": {
+    "description": "Button label for saving a meal form"
+  },
+  "cancel": "Anuluj",
+  "@cancel": {
+    "description": "Button label to cancel an action"
+  },
+  "confirmDeleteMeal": "Usunąć ten przepis?",
+  "@confirmDeleteMeal": {
+    "description": "Confirmation dialog title before deleting a meal"
+  },
+  "mealCreated": "Przepis dodany",
+  "@mealCreated": {
+    "description": "Success message after creating a meal"
+  },
+  "mealUpdated": "Przepis zaktualizowany",
+  "@mealUpdated": {
+    "description": "Success message after updating a meal"
+  },
+  "mealDeleted": "Przepis usunięty",
+  "@mealDeleted": {
+    "description": "Success message after deleting a meal"
+  },
+  "requiredField": "Wymagane",
+  "@requiredField": {
+    "description": "Validation message for an empty required field"
+  },
+  "invalidDuration": "Nieprawidłowy czas",
+  "@invalidDuration": {
+    "description": "Validation message for invalid meal duration"
+  },
   "errorFailedToLoadMealsByCategory": "Nie udało się załadować przepisów dla tej kategorii",
   "@errorFailedToLoadMealsByCategory": {
     "description": "Failed to load meals for this category"
@@ -149,5 +193,13 @@
   "errorFailedToAddFavorite": "Nie udało się dodać do ulubionych.",
   "@errorFailedToAddFavorite": {
     "description": "Failed to add meal to favorites"
+  },
+  "errorFailedToUpdateMeal": "Nie udało się zaktualizować przepisu.",
+  "@errorFailedToUpdateMeal": {
+    "description": "Failed to update meal"
+  },
+  "errorFailedToDeleteMeal": "Nie udało się usunąć przepisu.",
+  "@errorFailedToDeleteMeal": {
+    "description": "Failed to delete meal"
   }
 }

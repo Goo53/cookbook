@@ -16,6 +16,8 @@ extension MealExceptionLocalization on MealException {
       MealErrorType.failedToRemoveFavorite => l.errorFailedToRemoveFavorite,
       MealErrorType.failedToAddFavorite => l.errorFailedToAddFavorite,
       MealErrorType.failedToAddMeal => l.errorFailedToAddMeal,
+      MealErrorType.failedToUpdateMeal => l.errorFailedToUpdateMeal,
+      MealErrorType.failedToDeleteMeal => l.errorFailedToDeleteMeal,
     };
   }
 }

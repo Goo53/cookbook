@@ -8,6 +8,8 @@ enum MealErrorType {
   failedToRemoveFavorite,
   failedToAddFavorite,
   failedToAddMeal,
+  failedToUpdateMeal,
+  failedToDeleteMeal,
 }
 
 class MealException implements Exception {

@@ -118,6 +118,50 @@
   "@affordabilityLuxurious": {
     "description": "Did you have your payday?"
   },
+  "addMeal": "Add meal",
+  "@addMeal": {
+    "description": "Button or title for creating a new meal"
+  },
+  "editMeal": "Edit meal",
+  "@editMeal": {
+    "description": "Button or title for editing an existing meal"
+  },
+  "deleteMeal": "Delete meal",
+  "@deleteMeal": {
+    "description": "Button label for deleting a meal"
+  },
+  "saveMeal": "Save meal",
+  "@saveMeal": {
+    "description": "Button label for saving a meal form"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Button label to cancel an action"
+  },
+  "confirmDeleteMeal": "Delete this meal?",
+  "@confirmDeleteMeal": {
+    "description": "Confirmation dialog title before deleting a meal"
+  },
+  "mealCreated": "Meal created",
+  "@mealCreated": {
+    "description": "Success message after creating a meal"
+  },
+  "mealUpdated": "Meal updated",
+  "@mealUpdated": {
+    "description": "Success message after updating a meal"
+  },
+  "mealDeleted": "Meal deleted",
+  "@mealDeleted": {
+    "description": "Success message after deleting a meal"
+  },
+  "requiredField": "Required",
+  "@requiredField": {
+    "description": "Validation message for an empty required field"
+  },
+  "invalidDuration": "Invalid duration",
+  "@invalidDuration": {
+    "description": "Validation message for invalid meal duration"
+  },
   "errorFailedToLoadMealsByCategory": "Failed to load meals for this category",
   "@errorFailedToLoadMealsByCategory": {
     "description": "Failed to load meals for this category"
@@ -149,5 +193,13 @@
   "errorFailedToAddFavorite": "Failed to add to favorites.",
   "@errorFailedToAddFavorite": {
     "description": "Failed to add meal to favorites"
+  },
+  "errorFailedToUpdateMeal": "Failed to update meal.",
+  "@errorFailedToUpdateMeal": {
+    "description": "Failed to update meal"
+  },
+  "errorFailedToDeleteMeal": "Failed to delete meal.",
+  "@errorFailedToDeleteMeal": {
+    "description": "Failed to delete meal"
   }
 }

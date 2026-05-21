@@ -95,6 +95,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String get affordabilityLuxurious => 'Luxurious';
 
   @override
+  String get addMeal => 'Add meal';
+
+  @override
+  String get editMeal => 'Edit meal';
+
+  @override
+  String get deleteMeal => 'Delete meal';
+
+  @override
+  String get saveMeal => 'Save meal';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get confirmDeleteMeal => 'Delete this meal?';
+
+  @override
+  String get mealCreated => 'Meal created';
+
+  @override
+  String get mealUpdated => 'Meal updated';
+
+  @override
+  String get mealDeleted => 'Meal deleted';
+
+  @override
+  String get requiredField => 'Required';
+
+  @override
+  String get invalidDuration => 'Invalid duration';
+
+  @override
   String get errorFailedToLoadMealsByCategory =>
       'Failed to load meals for this category';
 
@@ -121,4 +154,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorFailedToAddFavorite => 'Failed to add to favorites.';
+
+  @override
+  String get errorFailedToUpdateMeal => 'Failed to update meal.';
+
+  @override
+  String get errorFailedToDeleteMeal => 'Failed to delete meal.';
 }

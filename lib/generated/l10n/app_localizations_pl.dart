@@ -95,6 +95,39 @@ class AppLocalizationsPl extends AppLocalizations {
   String get affordabilityLuxurious => 'Luksusowe';
 
   @override
+  String get addMeal => 'Dodaj przepis';
+
+  @override
+  String get editMeal => 'Edytuj przepis';
+
+  @override
+  String get deleteMeal => 'Usuń przepis';
+
+  @override
+  String get saveMeal => 'Zapisz przepis';
+
+  @override
+  String get cancel => 'Anuluj';
+
+  @override
+  String get confirmDeleteMeal => 'Usunąć ten przepis?';
+
+  @override
+  String get mealCreated => 'Przepis dodany';
+
+  @override
+  String get mealUpdated => 'Przepis zaktualizowany';
+
+  @override
+  String get mealDeleted => 'Przepis usunięty';
+
+  @override
+  String get requiredField => 'Wymagane';
+
+  @override
+  String get invalidDuration => 'Nieprawidłowy czas';
+
+  @override
   String get errorFailedToLoadMealsByCategory =>
       'Nie udało się załadować przepisów dla tej kategorii';
 
@@ -123,4 +156,10 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get errorFailedToAddFavorite => 'Nie udało się dodać do ulubionych.';
+
+  @override
+  String get errorFailedToUpdateMeal => 'Nie udało się zaktualizować przepisu.';
+
+  @override
+  String get errorFailedToDeleteMeal => 'Nie udało się usunąć przepisu.';
 }
