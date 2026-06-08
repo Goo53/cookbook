@@ -8,6 +8,7 @@ import 'package:cookbook/generated/l10n/app_localizations.dart';
 import 'package:cookbook/widgets/language_picker.dart';
 import '../exceptions/meal_exception.dart';
 import '../extensions/meal_exception_extensions.dart';
+import 'package:cookbook/screens/meal_form_screen.dart';
 
 class TabsScreen extends StatefulWidget {
   const TabsScreen({super.key});
@@ -117,7 +118,17 @@ class _TabsScreenState extends State<TabsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        actions: const [LanguagePicker()],
+        actions: [
+          IconButton(
+              onPressed: () async {
+                await Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const MealFormScreen(),
+                ));
+                await _loadData();
+              },
+              icon: const Icon(Icons.add)),
+          const LanguagePicker()
+        ],
       ),
       body: IndexedStack(
         index: _selectedIndex,

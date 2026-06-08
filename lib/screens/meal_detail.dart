@@ -5,6 +5,7 @@ import 'package:cookbook/models/meal.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';
 import 'package:cookbook/generated/l10n/app_localizations.dart';
+import 'package:cookbook/screens/meal_form_screen.dart';
 
 class MealDetailScreen extends StatefulWidget {
   const MealDetailScreen(
@@ -53,6 +54,12 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
           actions: [
             IconButton(
                 onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => MealFormScreen(meal: widget.meal)));
+                },
+                icon: const Icon(Icons.edit)),
+            IconButton(
+                onPressed: () {
                   final isAlreadyFav = favorites.isFav(widget.meal.id);
                   final loc = AppLocalizations.of(context);
                   final undoLabel = loc.undoButton;
@@ -73,7 +80,8 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                           label: undoLabel,
                           onPressed: () {
                             favorites.toggleFav(widget.meal.id);
-                            MealService.toggleFavorite(widget.meal.id).catchError((e) {
+                            MealService.toggleFavorite(widget.meal.id)
+                                .catchError((e) {
                               favorites.toggleFav(widget.meal.id);
                               if (mounted) {
                                 scaffoldMessenger
