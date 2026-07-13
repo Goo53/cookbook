@@ -87,20 +87,21 @@ class _MealFormScreenState extends State<MealFormScreen> {
       _isSaving = true;
     });
 
-    final meal = Meal(
-      id: widget.meal?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
-      title: _titleController.text.trim(),
-      imageUrl: _imageUrlController.text.trim(),
-      duration: int.parse(_durationController.text.trim()),
-      complexity: _selectedComplexity!,
-      affordability: _selectedAffordability!,
-      isMeat: _isMeat,
-      isVegetarian: _isVegetarian,
-      categories: _selectedCategories.toList(),
-      ingredients: _linesFrom(_ingredientsController.text),
-      steps: _linesFrom(_stepsController.text),
-    );
     try {
+      final meal = Meal(
+        id: widget.meal?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
+        title: _titleController.text.trim(),
+        imageUrl: _imageUrlController.text.trim(),
+        duration: int.parse(_durationController.text.trim()),
+        complexity: _selectedComplexity!,
+        affordability: _selectedAffordability!,
+        isMeat: _isMeat,
+        isVegetarian: _isVegetarian,
+        categories: _selectedCategories.toList(),
+        ingredients: _linesFrom(_ingredientsController.text),
+        steps: _linesFrom(_stepsController.text),
+      );
+// Meal created inside try (if created before in anything throw meal construction _isSaving stays true cause finally never runs)
       if (widget.meal == null) {
         await MealService.addMeal(meal);
       } else {
@@ -195,6 +196,8 @@ class _MealFormScreenState extends State<MealFormScreen> {
               const SizedBox(height: 14),
               TextFormField(
                 controller: _durationController,
+                decoration: const InputDecoration(
+                    labelText: "Duration", border: OutlineInputBorder()),
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 validator: (value) => MealFormValidators.positiveInt(
