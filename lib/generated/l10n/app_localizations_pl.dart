@@ -162,4 +162,8 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get errorFailedToDeleteMeal => 'Nie udało się usunąć przepisu.';
+
+  @override
+  String get errorMissingApiToken =>
+      'Brakuje tokenu API. Uruchom aplikację ze skonfigurowanym API_TOKEN.';
 }

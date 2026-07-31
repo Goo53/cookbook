@@ -201,5 +201,9 @@
   "errorFailedToDeleteMeal": "Failed to delete meal.",
   "@errorFailedToDeleteMeal": {
     "description": "Failed to delete meal"
+  },
+  "errorMissingApiToken": "API token is missing. Start the app with API_TOKEN configured.",
+  "@errorMissingApiToken": {
+    "description": "API token missing"
   }
 }

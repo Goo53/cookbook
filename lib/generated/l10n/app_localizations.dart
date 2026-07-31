@@ -391,6 +391,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to delete meal.'**
   String get errorFailedToDeleteMeal;
+
+  /// API token missing
+  ///
+  /// In en, this message translates to:
+  /// **'API token is missing. Start the app with API_TOKEN configured.'**
+  String get errorMissingApiToken;
 }
 
 class _AppLocalizationsDelegate

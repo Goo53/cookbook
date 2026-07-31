@@ -18,6 +18,7 @@ extension MealExceptionLocalization on MealException {
       MealErrorType.failedToAddMeal => l.errorFailedToAddMeal,
       MealErrorType.failedToUpdateMeal => l.errorFailedToUpdateMeal,
       MealErrorType.failedToDeleteMeal => l.errorFailedToDeleteMeal,
+      MealErrorType.missingApiToken => l.errorMissingApiToken,
     };
   }
 }

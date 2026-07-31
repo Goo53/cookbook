@@ -10,6 +10,7 @@ enum MealErrorType {
   failedToAddMeal,
   failedToUpdateMeal,
   failedToDeleteMeal,
+  missingApiToken,
 }
 
 class MealException implements Exception {

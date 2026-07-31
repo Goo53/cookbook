@@ -160,4 +160,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorFailedToDeleteMeal => 'Failed to delete meal.';
+
+  @override
+  String get errorMissingApiToken =>
+      'API token is missing. Start the app with API_TOKEN configured.';
 }
