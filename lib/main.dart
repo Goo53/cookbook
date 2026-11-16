@@ -6,6 +6,9 @@ import 'package:cookbook/state/fav_notifier.dart';
 import 'package:cookbook/state/locale_notifier.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'generated/l10n/app_localizations.dart'; //import 'state/fav_notifier.dart'; //adding it here Now context.watch / context.read works everywhere.
+import 'services/meal_repository.dart';
+import 'services/meal_service.dart';
+import 'state/meals_notifier.dart';
 
 final theme = ThemeData(
   useMaterial3: true,
@@ -19,7 +22,19 @@ final theme = ThemeData(
 void main() {
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(create: (_) => FavoritesNotifier()),
+      Provider<MealRepository>(
+        create: (_) => MealService(),
+        dispose: (_, repository) {
+          if (repository is MealService) {
+            repository.close();
+          }
+        },
+      ),
+      ChangeNotifierProvider(
+          create: (context) => MealsNotifier(context.read<MealRepository>())),
+      ChangeNotifierProvider(
+          create: (context) =>
+              FavoritesNotifier(context.read<MealRepository>())),
       ChangeNotifierProvider(create: (_) => LocaleNotifier()),
     ],
     child: const App(),

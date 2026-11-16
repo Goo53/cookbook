@@ -6,7 +6,12 @@ import 'package:cookbook/models/meal.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/services.dart';
 import 'package:cookbook/generated/l10n/app_localizations.dart';
-import 'package:cookbook/services/meal_service.dart';
+import 'package:cookbook/exceptions/meal_exception.dart';
+import 'package:cookbook/extensions/meal_exception_extensions.dart';
+import 'package:cookbook/state/meals_notifier.dart';
+import 'package:provider/provider.dart';
+
+enum MealFormResult { created, updated }
 
 // pending localizations
 class MealFormScreen extends StatefulWidget {
@@ -101,18 +106,25 @@ class _MealFormScreenState extends State<MealFormScreen> {
         ingredients: _linesFrom(_ingredientsController.text),
         steps: _linesFrom(_stepsController.text),
       );
-// Meal created inside try (if created before in anything throw meal construction _isSaving stays true cause finally never runs)
+
+      final mealsNotifier = context.read<MealsNotifier>();
       if (widget.meal == null) {
-        await MealService.addMeal(meal);
+        await mealsNotifier.addMeal(meal);
       } else {
-        await MealService.updateMeal(widget.meal!.id, meal);
+        await mealsNotifier.updateMeal(widget.meal!.id, meal);
       }
       if (!mounted) return;
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(widget.meal == null
+          ? MealFormResult.created
+          : MealFormResult.updated);
     } catch (error) {
       if (!mounted) return;
+      final errorMessage = error is MealException
+          ? error.localizedMessage(context)
+          : AppLocalizations.of(context).errorServerError;
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(error.toString())));
+        ..clearSnackBars()
+        ..showSnackBar(SnackBar(content: Text(errorMessage)));
     } finally {
       if (mounted) {
         setState(() {

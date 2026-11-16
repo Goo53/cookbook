@@ -17,9 +17,8 @@ class MealsList extends StatelessWidget {
       context,
       MaterialPageRoute(
           builder: (context) => MealDetailScreen(
-                meal: meal,
+                mealId: meal.id,
                 categoryColors: categoryColors,
-                length: meal.ingredients.length,
               )),
     );
   }

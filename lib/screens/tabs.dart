@@ -1,7 +1,7 @@
 import 'package:cookbook/screens/categories.dart';
 import 'package:cookbook/screens/meals_screen.dart';
-import 'package:cookbook/services/meal_service.dart';
 import 'package:cookbook/state/fav_notifier.dart';
+import 'package:cookbook/state/meals_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cookbook/generated/l10n/app_localizations.dart';
@@ -18,8 +18,6 @@ class TabsScreen extends StatefulWidget {
 
 class _TabsScreenState extends State<TabsScreen> {
   int _selectedIndex = 0;
-  bool _isLoading = true;
-  Object? _error;
 
   @override
   void initState() {
@@ -28,27 +26,10 @@ class _TabsScreenState extends State<TabsScreen> {
   }
 
   Future<void> _loadData() async {
-    setState(() {
-      _isLoading = true;
-      _error = null;
-    });
-    try {
-      await MealService.getMeals();
-      await MealService.loadFavorites();
-      if (!mounted) return;
-      context
-          .read<FavoritesNotifier>()
-          .setFavorites(MealService.getFavoriteIds());
-      setState(() {
-        _isLoading = false;
-      });
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _error = e;
-        });
-      }
-    }
+    await Future.wait([
+      context.read<MealsNotifier>().loadMeals(),
+      context.read<FavoritesNotifier>().loadFavorites(),
+    ]);
   }
 
   void _selectPage(int index) {
@@ -57,7 +38,11 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_error != null) {
+    final mealsNotifier = context.watch<MealsNotifier>();
+    final favoritesNotifier = context.watch<FavoritesNotifier>();
+    final loadError = mealsNotifier.loadError ?? favoritesNotifier.loadError;
+
+    if (loadError != null) {
       return Scaffold(
         body: Center(
           child: Column(
@@ -74,8 +59,8 @@ class _TabsScreenState extends State<TabsScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Text(
-                  _error is MealException
-                      ? (_error as MealException).localizedMessage(context)
+                  loadError is MealException
+                      ? loadError.localizedMessage(context)
                       : AppLocalizations.of(context).errorServerError,
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontSize: 14),
@@ -93,15 +78,16 @@ class _TabsScreenState extends State<TabsScreen> {
       );
     }
 
-    if (_isLoading) {
+    final isInitialLoading =
+        !mealsNotifier.hasLoaded || !favoritesNotifier.hasLoaded;
+    if (isInitialLoading) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
     }
+    final allMeals = mealsNotifier.meals;
+    final favMeals = favoritesNotifier.favoriteMeals(allMeals);
 
-    final favoritesNotifier = context.watch<FavoritesNotifier>();
-    final allMeals = MealService.getCachedMeals();
-    final favMeals = favoritesNotifier.getFavMeals(allMeals);
     final pages = [
       const CategoriesScreen(),
       MealsScreen(
@@ -121,10 +107,21 @@ class _TabsScreenState extends State<TabsScreen> {
         actions: [
           IconButton(
               onPressed: () async {
-                await Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const MealFormScreen(),
-                ));
-                await _loadData();
+                final result = await Navigator.of(context).push<MealFormResult>(
+                  MaterialPageRoute(
+                    builder: (context) => const MealFormScreen(),
+                  ),
+                );
+                if (!context.mounted) return;
+                if (result == MealFormResult.created) {
+                  ScaffoldMessenger.of(context)
+                    ..clearSnackBars()
+                    ..showSnackBar(
+                      SnackBar(
+                        content: Text(AppLocalizations.of(context).mealCreated),
+                      ),
+                    );
+                }
               },
               icon: const Icon(Icons.add)),
           const LanguagePicker()

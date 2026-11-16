@@ -1,5 +1,7 @@
-import 'package:cookbook/services/meal_service.dart';
+import 'package:cookbook/state/meals_notifier.dart';
 import 'package:cookbook/state/fav_notifier.dart';
+import 'package:cookbook/exceptions/meal_exception.dart';
+import 'package:cookbook/extensions/meal_exception_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:cookbook/models/meal.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -8,100 +10,107 @@ import 'package:cookbook/generated/l10n/app_localizations.dart';
 import 'package:cookbook/screens/meal_form_screen.dart';
 
 class MealDetailScreen extends StatefulWidget {
-  const MealDetailScreen(
-      {super.key,
-      required this.meal,
-      required this.categoryColors,
-      required this.length});
+  const MealDetailScreen({
+    super.key,
+    required this.mealId,
+    required this.categoryColors,
+  });
 
-  final Meal meal;
+  final String mealId;
   final List<Color> categoryColors;
-  final int length;
 
   @override
   State<MealDetailScreen> createState() => _MealDetailScreenState();
 }
 
 class _MealDetailScreenState extends State<MealDetailScreen> {
-  // Map<String, bool> checkMap =
-  // for (final ingridient in widget.meal.ingredients) {
-  //     checkMap.addEntries({ingridient: false}.entries);
-  //   };
-  var checkboxValue3 = false;
   final Map<String, bool> _map = {};
-  //Map<String, bool> updatedMap = {};
-  //List<bool> checkinList = [];
-  //List<bool> checkinList = [];
-
-  @override
-  void initState() {
-    //for(var in widget.meal.ingredients) {checkinList.add(false);}
-    //for(int i=0,i<length,i++) {checkinList.add(value)};
-    for (final ingredient in widget.meal.ingredients) {
-      _map[ingredient] = false;
-    }
-    //print(_map);
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
+    final meal = context.select<MealsNotifier, Meal?>(
+        (notifier) => notifier.mealById(widget.mealId));
+
+    if (meal == null) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Text(AppLocalizations.of(context).noMealsText,
+                  textAlign: TextAlign.center),
+            ),
+          ),
+        ),
+      );
+    }
     final favorites = context.watch<FavoritesNotifier>();
-    final isFav = favorites.isFav(widget.meal.id);
+    final isFav = favorites.isFavorite(meal.id);
+    final isPending = favorites.isPending(meal.id);
+
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.meal.title),
+          title: Text(meal.title),
           actions: [
             IconButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => MealFormScreen(meal: widget.meal)));
+                onPressed: () async {
+                  final result =
+                      await Navigator.of(context).push<MealFormResult>(
+                    MaterialPageRoute(
+                      builder: (context) => MealFormScreen(meal: meal),
+                    ),
+                  );
+                  if (!context.mounted) {
+                    return;
+                  }
+                  if (result == MealFormResult.updated) {
+                    ScaffoldMessenger.of(context)
+                      ..clearSnackBars()
+                      ..showSnackBar(SnackBar(
+                          content:
+                              Text(AppLocalizations.of(context).mealUpdated)));
+                  }
                 },
                 icon: const Icon(Icons.edit)),
             IconButton(
-                onPressed: () {
-                  final isAlreadyFav = favorites.isFav(widget.meal.id);
-                  final loc = AppLocalizations.of(context);
-                  final undoLabel = loc.undoButton;
-                  final removedMsg = loc.removedFromFavorites;
-                  final addedMsg = loc.addedToFavorites;
-                  final errorMsg = loc.errorServerError;
-                  final scaffoldMessenger = ScaffoldMessenger.of(context);
-                  favorites.toggleFav(widget.meal.id);
-                  MealService.toggleFavorite(widget.meal.id).then((_) {
-                    if (!mounted) return;
-                    scaffoldMessenger
-                      ..clearSnackBars()
-                      ..showSnackBar(SnackBar(
-                        content: Text(
-                          isAlreadyFav ? removedMsg : addedMsg,
-                        ),
-                        action: SnackBarAction(
-                          label: undoLabel,
-                          onPressed: () {
-                            favorites.toggleFav(widget.meal.id);
-                            MealService.toggleFavorite(widget.meal.id)
-                                .catchError((e) {
-                              favorites.toggleFav(widget.meal.id);
-                              if (mounted) {
-                                scaffoldMessenger
-                                  ..clearSnackBars()
-                                  ..showSnackBar(
-                                      SnackBar(content: Text(errorMsg)));
-                              }
-                            });
-                          },
-                        ),
-                        duration: const Duration(seconds: 4),
-                      ));
-                  }).catchError((e) {
-                    favorites.toggleFav(widget.meal.id);
-                    if (!mounted) return;
-                    scaffoldMessenger
-                      ..clearSnackBars()
-                      ..showSnackBar(SnackBar(content: Text(e.toString())));
-                  });
-                },
+                onPressed: isPending
+                    ? null
+                    : () async {
+                        final favoritesNotifier =
+                            context.read<FavoritesNotifier>();
+                        final shouldBeFavorite =
+                            !favoritesNotifier.isFavorite(meal.id);
+                        try {
+                          await favoritesNotifier.setFavorite(
+                              meal.id, shouldBeFavorite);
+                          if (!context.mounted) {
+                            return;
+                          }
+                          final message = shouldBeFavorite
+                              ? AppLocalizations.of(context).addedToFavorites
+                              : AppLocalizations.of(context)
+                                  .removedFromFavorites;
+                          ScaffoldMessenger.of(context)
+                            ..clearSnackBars()
+                            ..showSnackBar(
+                              SnackBar(
+                                content: Text(message),
+                              ),
+                            );
+                        } catch (error) {
+                          if (!context.mounted) {
+                            return;
+                          }
+                          final message = error is MealException
+                              ? error.localizedMessage(context)
+                              : AppLocalizations.of(context).errorServerError;
+                          ScaffoldMessenger.of(context)
+                            ..clearSnackBars()
+                            ..showSnackBar(
+                              SnackBar(content: Text(message)),
+                            );
+                        }
+                      },
                 icon: Icon(isFav ? Icons.star : Icons.star_border_outlined)),
           ],
         ),
@@ -123,7 +132,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                 child: AspectRatio(
                   aspectRatio: 16 / 9,
                   child: CachedNetworkImage(
-                    imageUrl: widget.meal.imageUrl,
+                    imageUrl: meal.imageUrl,
                     fit: BoxFit.cover,
                     placeholder: (context, url) =>
                         Container(color: Colors.grey[300]),
@@ -143,15 +152,15 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
             ),
             const SizedBox(height: 14),
             // Ingredients checkboxes
-            ..._map.entries.map((entry) => CheckboxListTile(
-                  value: entry.value,
+            ...meal.ingredients.map((ingredient) => CheckboxListTile(
+                  value: _map[ingredient] ?? false,
                   onChanged: (bool? value) {
                     setState(() {
-                      _map[entry.key] = value!;
+                      _map[ingredient] = value ?? false;
                     });
                   },
                   title: Text(
-                    entry.key,
+                    ingredient,
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(
                         color: Theme.of(context).colorScheme.onSurface),
                   ),
@@ -165,7 +174,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                   .copyWith(color: Theme.of(context).colorScheme.primary),
             ),
             const SizedBox(height: 8),
-            ...widget.meal.steps.map((step) => Padding(
+            ...meal.steps.map((step) => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Text(
                     step,
