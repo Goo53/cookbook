@@ -7,6 +7,7 @@ import 'package:cookbook/state/locale_notifier.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'generated/l10n/app_localizations.dart'; //import 'state/fav_notifier.dart'; //adding it here Now context.watch / context.read works everywhere.
 import 'services/meal_repository.dart';
+import 'services/fake_meal_repository.dart';
 import 'services/meal_service.dart';
 import 'state/meals_notifier.dart';
 
@@ -23,7 +24,7 @@ void main() {
   runApp(MultiProvider(
     providers: [
       Provider<MealRepository>(
-        create: (_) => MealService(),
+        create: (_) => FakeMealRepository(), //(_) => MealService(),
         dispose: (_, repository) {
           if (repository is MealService) {
             repository.close();
