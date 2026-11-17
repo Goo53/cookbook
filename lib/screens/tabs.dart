@@ -93,12 +93,10 @@ class _TabsScreenState extends State<TabsScreen> {
       MealsScreen(
         title: AppLocalizations.of(context).allRecipesLabel,
         meals: allMeals,
-        colors: const [Colors.blue, Colors.cyan],
       ),
       MealsScreen(
         title: AppLocalizations.of(context).favoritesLabel,
         meals: favMeals,
-        colors: const [Colors.red, Colors.orange],
       ),
     ];
 

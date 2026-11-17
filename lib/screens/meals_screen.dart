@@ -10,14 +10,12 @@ class MealsScreen extends StatelessWidget {
     super.key,
     this.title,
     this.meals,
-    required this.colors,
     this.categoryApiKey,
   }) : assert(meals != null || categoryApiKey != null,
             'Either meals or categoryApiKey must be provided');
 
   final String? title; //title optional
   final List<Meal>? meals;
-  final List<Color> colors;
   final String? categoryApiKey; //categoryApiKey optional
 
   @override
@@ -45,7 +43,6 @@ class MealsScreen extends StatelessWidget {
                   )
                 : MealsList(
                     meals: displayedMeals,
-                    categoryColors: colors,
                   ),
           ),
         ],

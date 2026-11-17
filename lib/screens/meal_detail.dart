@@ -8,16 +8,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';
 import 'package:cookbook/generated/l10n/app_localizations.dart';
 import 'package:cookbook/screens/meal_form_screen.dart';
+import 'package:cookbook/theme/meal_colors.dart';
 
 class MealDetailScreen extends StatefulWidget {
   const MealDetailScreen({
     super.key,
     required this.mealId,
-    required this.categoryColors,
   });
 
   final String mealId;
-  final List<Color> categoryColors;
 
   @override
   State<MealDetailScreen> createState() => _MealDetailScreenState();
@@ -47,6 +46,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
     final favorites = context.watch<FavoritesNotifier>();
     final isFav = favorites.isFavorite(meal.id);
     final isPending = favorites.isPending(meal.id);
+    final gradientColors = mealGradientColors(meal);
 
     return Scaffold(
         appBar: AppBar(
@@ -122,7 +122,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 gradient: LinearGradient(
-                  colors: widget.categoryColors,
+                  colors: gradientColors,
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),

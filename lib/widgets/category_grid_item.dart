@@ -20,10 +20,6 @@ class CategoryGridItem extends StatelessWidget {
         builder: (context) => MealsScreen(
           title: displayName,
           categoryApiKey: category.apiKey, //dummyMeals,
-          colors: [
-            category.color.withValues(alpha: 0.30),
-            category.color.withValues(alpha: 0.6),
-          ],
         ),
       ),
     );

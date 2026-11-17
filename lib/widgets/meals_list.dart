@@ -4,13 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:cookbook/generated/l10n/app_localizations.dart';
 import 'package:cookbook/models/meal.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cookbook/theme/meal_colors.dart';
 
 class MealsList extends StatelessWidget {
-  const MealsList(
-      {super.key, required this.meals, required this.categoryColors});
+  const MealsList({super.key, required this.meals});
 
   final List<Meal> meals;
-  final List<Color> categoryColors;
 
   void _mealDetail(BuildContext context, Meal meal) {
     Navigator.push(
@@ -18,7 +17,6 @@ class MealsList extends StatelessWidget {
       MaterialPageRoute(
           builder: (context) => MealDetailScreen(
                 mealId: meal.id,
-                categoryColors: categoryColors,
               )),
     );
   }
@@ -64,7 +62,7 @@ class MealsList extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 gradient: LinearGradient(
-                  colors: categoryColors,
+                  colors: mealGradientColors(meals[index]),
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
