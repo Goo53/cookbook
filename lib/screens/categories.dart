@@ -1,6 +1,6 @@
 import 'package:cookbook/widgets/category_grid_item.dart';
 import '../data/available_categories.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:cookbook/generated/l10n/app_localizations.dart';
 
 class CategoriesScreen extends StatelessWidget {

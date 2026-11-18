@@ -2,7 +2,7 @@ import 'package:cookbook/state/meals_notifier.dart';
 import 'package:cookbook/state/fav_notifier.dart';
 import 'package:cookbook/exceptions/meal_exception.dart';
 import 'package:cookbook/extensions/meal_exception_extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:cookbook/models/meal.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';

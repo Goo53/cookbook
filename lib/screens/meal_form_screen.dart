@@ -1,7 +1,7 @@
 import 'package:cookbook/data/available_categories.dart';
 import 'package:cookbook/extensions/meal_display_extensions.dart';
 import 'package:cookbook/validators/meal_form_validators.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:cookbook/models/meal.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/services.dart';

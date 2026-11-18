@@ -1,6 +1,6 @@
 import 'package:cookbook/exceptions/meal_exception.dart';
 import 'package:cookbook/generated/l10n/app_localizations.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 extension MealExceptionLocalization on MealException {
   String localizedMessage(BuildContext context) {

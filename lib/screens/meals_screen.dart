@@ -1,5 +1,5 @@
 import 'package:cookbook/widgets/meals_list.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:cookbook/models/meal.dart';
 import 'package:cookbook/generated/l10n/app_localizations.dart';
 import 'package:cookbook/state/meals_notifier.dart';

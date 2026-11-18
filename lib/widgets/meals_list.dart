@@ -1,6 +1,6 @@
 import 'package:cookbook/screens/meal_detail.dart';
 import 'package:cookbook/widgets/meal_item_trait.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:cookbook/generated/l10n/app_localizations.dart';
 import 'package:cookbook/models/meal.dart';
 import 'package:cached_network_image/cached_network_image.dart';

@@ -1,6 +1,6 @@
 import 'package:cookbook/models/meal.dart';
 import '../generated/l10n/app_localizations.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 extension ComplexityDisplay on Complexity {
   String displayLabel(BuildContext context) {

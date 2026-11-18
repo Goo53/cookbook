@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:cookbook/models/meal.dart';
 import 'package:cookbook/data/available_categories.dart';
 

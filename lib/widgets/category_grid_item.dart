@@ -1,5 +1,5 @@
 import 'package:cookbook/screens/meals_screen.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:cookbook/models/category.dart';
 import 'package:cookbook/data/available_categories.dart';
 
