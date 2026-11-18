@@ -29,7 +29,6 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
   Widget build(BuildContext context) {
     final meal = context.select<MealsNotifier, Meal?>(
         (notifier) => notifier.mealById(widget.mealId));
-
     if (meal == null) {
       return Scaffold(
         appBar: AppBar(
@@ -112,6 +111,62 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                         }
                       },
                 icon: Icon(isFav ? Icons.star : Icons.star_border_outlined)),
+            IconButton(
+              onPressed: () async {
+                final confirm = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          title: Text(AppLocalizations.of(context).deleteMeal),
+                          content: Text(
+                              AppLocalizations.of(context).confirmDeleteMeal),
+                          actions: [
+                            TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(false),
+                                child:
+                                    Text(AppLocalizations.of(context).cancel)),
+                            TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(true),
+                                child: Text(
+                                    AppLocalizations.of(context).deleteMeal)),
+                          ],
+                        ));
+                if (confirm == true) {
+                  try {
+                    if (!context.mounted) {
+                      return;
+                    }
+                    final mealsNotifier = context.read<MealsNotifier>();
+                    final favoriteNotifier = context.read<FavoritesNotifier>();
+                    await mealsNotifier.deleteMeal(meal.id);
+                    favoriteNotifier.removeMeal(meal
+                        .id); // removeMeal return void and updates local state
+
+                    if (!context.mounted) {
+                      return;
+                    }
+                    Navigator.of(context).pop();
+                  } catch (error) {
+                    if (!context.mounted) {
+                      return;
+                    }
+                    final message = error is MealException
+                        ? error.localizedMessage(context)
+                        : AppLocalizations.of(context).errorServerError;
+                    ScaffoldMessenger.of(context)
+                      ..clearSnackBars()
+                      ..showSnackBar(
+                        SnackBar(content: Text(message)),
+                      );
+                  }
+                }
+              },
+              icon: const Icon(
+                Icons.delete,
+                color: Colors.redAccent,
+              ),
+            ),
           ],
         ),
         body: ListView(
